@@ -16,7 +16,7 @@ namespace MonitorInactividad
         private AudioDetector audioDetector = new AudioDetector();
         private TrayIcon trayIcon;
 
-        //Nota.- para linux debo tener instalado
+        //Nota.- para linux debo tener instalado en linux
         // sudo apt install xprintidle x11-xserver-utils
 
         // --- Windows: P/Invoke para inactividad ---
