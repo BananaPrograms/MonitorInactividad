@@ -119,7 +119,7 @@ namespace MonitorInactividad
             btnDetener.Click += BtnDetener_Click;
 
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(2);
+            timer.Interval = TimeSpan.FromMilliseconds(50);
             timer.Tick += Timer_Tick;
 
                 // Detectar si la app fue ejecutada por inicio automático
@@ -199,7 +199,7 @@ namespace MonitorInactividad
             txtStatus.Text = $"Tiempo inactivo: {inactivo.Minutes}m {inactivo.Seconds}s";
             bool hayAudio = audioDetector.HayAudioActivo();
 
-            if (inactivo > tiempoLimite && !monitoresApagados && !hayAudio)
+            if (inactivo > tiempoLimite && !monitoresApagados)
             {
                 ApagarMonitores();
                 monitoresApagados = true;
@@ -210,23 +210,36 @@ namespace MonitorInactividad
                 monitoresApagados = false;
             }
         }
+        private uint ultimoTiempoActividad = (uint)Environment.TickCount;
 
         private TimeSpan ObtenerTiempoInactividad()
         {
+            bool hayAudio = audioDetector.HayAudioActivo();
+
+            if (hayAudio)
+            {
+                // Reiniciamos nuestro contador de actividad cuando hay audio
+                ultimoTiempoActividad = (uint)Environment.TickCount;
+                return TimeSpan.Zero;
+            }
+
+            uint tiempoActual = (uint)Environment.TickCount;
+
             if (OperatingSystem.IsWindows())
             {
                 LASTINPUTINFO info = new LASTINPUTINFO();
                 info.cbSize = (uint)Marshal.SizeOf(info);
                 GetLastInputInfo(ref info);
-                uint tiempoActual = (uint)Environment.TickCount;
-                uint tiempoInactivo = tiempoActual - info.dwTime;
+
+                // Tomamos el mayor entre nuestro contador y el input real de Windows
+                uint ultimo = Math.Max(ultimoTiempoActividad, info.dwTime);
+                uint tiempoInactivo = tiempoActual - ultimo;
                 return TimeSpan.FromMilliseconds(tiempoInactivo);
             }
             else if (OperatingSystem.IsLinux())
             {
                 try
                 {
-                    // Ejecuta xprintidle para obtener milisegundos de inactividad
                     var psi = new ProcessStartInfo("xprintidle")
                     {
                         RedirectStandardOutput = true,
@@ -236,12 +249,14 @@ namespace MonitorInactividad
                     string output = proceso!.StandardOutput.ReadToEnd();
                     proceso.WaitForExit();
                     if (uint.TryParse(output.Trim(), out uint ms))
-                        return TimeSpan.FromMilliseconds(ms);
+                    {
+                        // Reiniciamos el contador si hubo audio
+                        uint ultimo = Math.Max(ultimoTiempoActividad, ms);
+                        uint tiempoInactivo = tiempoActual - ultimo;
+                        return TimeSpan.FromMilliseconds(tiempoInactivo);
+                    }
                 }
-                catch
-                {
-                    // Si falla, asumimos 0
-                }
+                catch { }
                 return TimeSpan.Zero;
             }
             else
