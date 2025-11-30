@@ -28,7 +28,9 @@ D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\Avalonia.Themes.Simple.dll
 D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\Avalonia.Win32.Automation.dll
 D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\Avalonia.Win32.dll
 D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\Avalonia.X11.dll
+D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\DialogHost.Avalonia.dll
 D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\HarfBuzzSharp.dll
+D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\MsBox.Avalonia.dll
 D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\MicroCom.Runtime.dll
 D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\NAudio.dll
 D:\Proyectos\MonitorInactividad\bin\Debug\net9.0\NAudio.Asio.dll
@@ -72,6 +74,7 @@ D:\Proyectos\MonitorInactividad\obj\Debug\net9.0\MonitorInactividad.GeneratedMSB
 D:\Proyectos\MonitorInactividad\obj\Debug\net9.0\MonitorInactividad.AssemblyInfoInputs.cache
 D:\Proyectos\MonitorInactividad\obj\Debug\net9.0\MonitorInactividad.AssemblyInfo.cs
 D:\Proyectos\MonitorInactividad\obj\Debug\net9.0\MonitorInactividad.csproj.CoreCompileInputs.cache
+D:\Proyectos\MonitorInactividad\obj\Debug\net9.0\MonitorInactividad.sourcelink.json
 D:\Proyectos\MonitorInactividad\obj\Debug\net9.0\MonitorI.5D7F5353.Up2Date
 D:\Proyectos\MonitorInactividad\obj\Debug\net9.0\MonitorInactividad.dll
 D:\Proyectos\MonitorInactividad\obj\Debug\net9.0\refint\MonitorInactividad.dll

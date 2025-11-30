@@ -71,6 +71,10 @@
               "target": "Package",
               "version": "[11.3.6, )"
             },
+            "MessageBox.Avalonia": {
+              "target": "Package",
+              "version": "[3.3.0, )"
+            },
             "NAudio": {
               "target": "Package",
               "version": "[2.2.1, )"

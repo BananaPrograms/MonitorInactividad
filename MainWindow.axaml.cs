@@ -5,6 +5,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
+using Avalonia.Controls.Notifications;
+using Avalonia.Interactivity;
+using System.Linq;
 
 namespace MonitorInactividad
 {
@@ -15,6 +18,7 @@ namespace MonitorInactividad
         private TimeSpan tiempoLimite = TimeSpan.FromMinutes(1);
         private AudioDetector audioDetector = new AudioDetector();
         private TrayIcon trayIcon;
+        private bool _startHidden = false;
 
         //Nota.- para linux debo tener instalado en linux
         // sudo apt install xprintidle x11-xserver-utils
@@ -117,11 +121,51 @@ namespace MonitorInactividad
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(2);
             timer.Tick += Timer_Tick;
+
+                // Detectar si la app fue ejecutada por inicio automático
+            string[] args = Environment.GetCommandLineArgs();
+            bool isAutoStartExecution = args.Contains("--autostart");
+            string appName = "MonitorInactividad";
+
+            chkInicioAutomatico.IsChecked =
+                InicioAutomatico.IsAutoStartEnabled(appName);
+
+            // SOLO ocultar si realmente inició desde autostart
+            if (isAutoStartExecution)
+            {
+                Iniciar_Conteo();
+
+                var notification = new WindowNotificationManager(this)
+                {
+                    Position = NotificationPosition.TopRight
+                };
+
+                notification.Show(new Notification("Información", "MINIMIZA.", NotificationType.Information));
+
+                _startHidden = true;   // ← Solo marcar intención
+            }
+
+
+            this.Opened += (_, __) =>
+            {
+                if (_startHidden)
+                {
+                    this.Hide();
+                    trayIcon.IsVisible = true;
+                    _startHidden = false;
+                }
+            };
         }
+
         private void BtnIniciar_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
+            Iniciar_Conteo();
+        }
+
+        private void Iniciar_Conteo()
+        {
             if (int.TryParse(txtTiempoLimite.Text, out int minutos))
-                tiempoLimite = TimeSpan.FromMinutes(minutos);
+            tiempoLimite = TimeSpan.FromMinutes(minutos);
 
             monitoresApagados = false;
             timer.Start();
@@ -240,5 +284,37 @@ namespace MonitorInactividad
                 // Ignorar errores
             }
         }
+
+
+        private void chkInicioAutomatico_Checked(object? sender, RoutedEventArgs e)
+        {
+            // Aquí se ejecuta cuando el usuario MARCA el CheckBox
+            /*var notification = new WindowNotificationManager(this)
+            {
+                Position = NotificationPosition.TopRight
+            };
+
+            notification.Show(new Notification("Información", "Se activó el inicio automatico.", NotificationType.Information));*/
+
+            string appName = "MonitorInactividad";
+            string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            InicioAutomatico.EnableAutoStart(appName, appPath);
+        }
+
+        private void chkInicioAutomatico_Unchecked(object? sender, RoutedEventArgs e)
+        {
+            // Aquí se ejecuta cuando el usuario DESMARCA el CheckBox
+            var notification = new WindowNotificationManager(this)
+            {
+                Position = NotificationPosition.TopRight
+            };
+
+            notification.Show(new Notification("Información", "Se desactivo el inicio automatico.", NotificationType.Information));
+
+            string appName = "MonitorInactividad";
+            InicioAutomatico.DisableAutoStart(appName);
+        }
+
+        
     }
 }
