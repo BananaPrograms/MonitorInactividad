@@ -312,7 +312,16 @@ namespace MonitorInactividad
             notification.Show(new Notification("Información", "Se activó el inicio automatico.", NotificationType.Information));*/
 
             string appName = "MonitorInactividad";
-            string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string appPath = "";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                appPath = appPath = Environment.ProcessPath!;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            }              
             InicioAutomatico.EnableAutoStart(appName, appPath);
         }
 

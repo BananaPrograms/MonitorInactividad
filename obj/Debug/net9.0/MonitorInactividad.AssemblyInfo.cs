@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MonitorInactividad")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+81b7691df0f19cbc99e5cf303a9d86ec7f7b4e2a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6576fe812080a56b8b8587828a454e259c4f2432")]
 [assembly: System.Reflection.AssemblyProductAttribute("MonitorInactividad")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MonitorInactividad")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
